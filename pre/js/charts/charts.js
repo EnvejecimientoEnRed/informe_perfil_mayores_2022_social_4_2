@@ -24,9 +24,7 @@ export function initChart(iframe) {
     d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_social_4_2/main/data/estado_civil_65_1970_2020_csv.csv', function(error,data) {
         if (error) throw error;
 
-        console.log(data);
-
-        let margin = {top: 10, right: 30, bottom: 20, left: 50},
+        let margin = {top: 10, right: 30, bottom: 20, left: 35},
             width = document.getElementById('chart').clientWidth - margin.left - margin.right,
             height = document.getElementById('chart').clientHeight - margin.top - margin.bottom;
 
@@ -37,7 +35,7 @@ export function initChart(iframe) {
         .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        let estados = data.columns.slice(1)
+        let estados = data.columns.slice(7);
         let periodos = d3.map(data, function(d){return(d.Periodo)}).keys();
 
         let x = d3.scaleBand()
@@ -73,17 +71,31 @@ export function initChart(iframe) {
                 .attr("transform", function(d) { return "translate(" + x(d.Periodo) + ",0)"; })
                 .selectAll("rect")
                 .data(function(d) { return estados.map(function(key) { return {key: key, value: d[key]}; }); })
-                .enter().append("rect")
+                .enter()
+                .append("rect")
+                .attr('class','prueba')
                 .attr("x", function(d) { return xSubgroup(d.key); })
-                .attr("y", function(d) { return y(d.value); })
+                .attr("y", function(d) { return y(0); })
                 .attr("width", xSubgroup.bandwidth())
-                .attr("height", function(d) { return height - y(d.value); })
-                .attr("fill", function(d) { return color(d.key); });
-
+                .attr("height", function(d) { return 0; })
+                .attr("fill", function(d) { return color(d.key); })
+                .transition()
+                .duration(2000)
+                .attr("y", function(d) { return y(+d.value); })
+                .attr("height", function(d) { return height - y(+d.value); });
         }
 
         function animateChart() {
-
+            svg.selectAll('.prueba')
+                .attr("x", function(d) { return xSubgroup(d.key); })
+                .attr("y", function(d) { return y(0); })
+                .attr("width", xSubgroup.bandwidth())
+                .attr("height", function(d) { return 0; })
+                .attr("fill", function(d) { return color(d.key); })
+                .transition()
+                .duration(2000)
+                .attr("y", function(d) { return y(+d.value); })
+                .attr("height", function(d) { return height - y(+d.value); });
         }
 
         /////
@@ -118,7 +130,7 @@ export function initChart(iframe) {
 
         pngDownload.addEventListener('click', function(){
             setChartCanvasImage('evolucion_estado_civil');
-            setCustomCanvas('evolucion_estado_civil');
+            setChartCustomCanvasImage('evolucion_estado_civil');
         });
 
         //Altura del frame
