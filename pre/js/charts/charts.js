@@ -24,7 +24,7 @@ let dictionary = {
 
 export function initChart() {
     //Desarrollo del gráfico
-    d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_social_4_2/main/data/estado_civil_65_1970_2020_csv.csv', function(error,data) {
+    d3.csv('https://raw.githubusercontent.com/EnvejecimientoEnRed/informe_perfil_mayores_2022_social_4_2/main/data/estado_civil_65_1970_2020_csv.csv', function(error,data) {
         if (error) throw error;
 
         let margin = {top: 12.5, right: 30, bottom: 25, left: 35},
